@@ -2,7 +2,7 @@ use serde::Deserialize;
 
 #[derive(Deserialize, Debug)]
 pub struct Sheet {
-    identification: Identification,
+    identification: Option<Identification>,
     #[serde(rename = "credit", default)]
     credits: Vec<Credit>,
     #[serde(rename = "part-list")]
@@ -43,11 +43,11 @@ enum Note {
     Note {
         pitch: Option<Pitch>,
         duration: u8,
-        voice: u8,
+        voice: Option<u8>,
         #[serde(rename = "type")]
         ty: Option<String>,
         stem: Option<String>,
-        staff: u8,
+        staff: Option<u8>,
         #[serde(rename = "beam")]
         beams: Option<Vec<Beam>>,
         dot: Option<Vec<()>>,
@@ -103,7 +103,7 @@ pub struct ScorePart {
     #[serde(rename = "part-abbreviation")]
     abbreviation: Option<String>,
     #[serde(rename = "score-instrument")]
-    instrument: Instrument,
+    instrument: Option<Instrument>,
 }
 
 #[derive(Deserialize, Debug)]
@@ -141,7 +141,7 @@ pub struct Time {
 
 #[derive(Deserialize, Debug)]
 pub struct Clef {
-    number: u8,
+    number: Option<u8>,
     sign: String,
     line: String,
 }

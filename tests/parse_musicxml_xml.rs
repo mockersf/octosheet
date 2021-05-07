@@ -1,6 +1,11 @@
 use octosheet::*;
 
 #[test]
+fn can_parse_file_hello_world() {
+    assert!(dbg!(parse_file("sheets/hello_world.xml")).is_ok());
+}
+
+#[test]
 fn can_parse_file_ode_to_joy() {
     assert!(dbg!(parse_file("sheets/Ode_to_joy_Piano_for_kids.xml")).is_ok());
 }
