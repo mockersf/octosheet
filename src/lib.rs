@@ -1,8 +1,7 @@
 use serde::Deserialize;
-use serde_xml_rs::Deserializer;
 
 #[derive(Deserialize, Debug)]
-struct Sheet {
+pub struct Sheet {
     identification: Identification,
     #[serde(rename = "credit", default)]
     credits: Vec<Credit>,
@@ -13,25 +12,25 @@ struct Sheet {
 }
 
 #[derive(Deserialize, Debug)]
-struct Identification {
     creator: Creator,
+pub struct Identification {
 }
 
 #[derive(Deserialize, Debug)]
-struct Credit {
+pub struct Credit {
     page: u8,
     #[serde(rename = "credit-words")]
     words: Vec<CreditWords>,
 }
 
 #[derive(Deserialize, Debug)]
-struct CreditWords {
+pub struct CreditWords {
     #[serde(rename = "$value")]
     words: String,
 }
 
 #[derive(Deserialize, Debug)]
-struct Creator {
+pub struct Creator {
     #[serde(rename = "type")]
     ty: String,
     #[serde(rename = "$value")]
@@ -77,27 +76,27 @@ enum Note {
 }
 
 #[derive(Deserialize, Debug)]
-struct Pitch {
+pub struct Pitch {
     step: String,
     alter: Option<i8>,
     octave: u8,
 }
 
 #[derive(Deserialize, Debug)]
-struct Beam {
+pub struct Beam {
     number: u8,
     #[serde(rename = "$value")]
     value: String,
 }
 
 #[derive(Deserialize, Debug)]
-struct PartList {
+pub struct PartList {
     #[serde(rename = "score-part")]
     part_list: Vec<ScorePart>,
 }
 
 #[derive(Deserialize, Debug)]
-struct ScorePart {
+pub struct ScorePart {
     id: String,
     #[serde(rename = "part-name")]
     name: String,
@@ -108,50 +107,47 @@ struct ScorePart {
 }
 
 #[derive(Deserialize, Debug)]
-struct Instrument {
+pub struct Instrument {
     id: String,
     #[serde(rename = "instrument-name")]
     name: String,
 }
 
 #[derive(Deserialize, Debug)]
-struct Part {
+pub struct Part {
     id: String,
     #[serde(rename = "measure")]
     measures: Vec<Measure>,
 }
 
 #[derive(Deserialize, Debug)]
-struct Measure {
+pub struct Measure {
     number: u8,
     #[serde(rename = "$value")]
     notes: Vec<Note>,
 }
 
 #[derive(Deserialize, Debug)]
-struct Key {
+pub struct Key {
     fifths: i8,
 }
 
 #[derive(Deserialize, Debug)]
-struct Time {
+pub struct Time {
     beats: u8,
     #[serde(rename = "beat-type")]
     beat_type: u8,
 }
 
 #[derive(Deserialize, Debug)]
-struct Clef {
+pub struct Clef {
     number: u8,
     sign: String,
     line: String,
 }
 
-pub fn parse_file(path: &str) -> () {
-    // let mut de = Deserializer::new_from_reader(std::fs::File::open(path).unwrap())
-    //     .non_contiguous_seq_elements(true);
-    // let actual = dbg!(Measure::deserialize(&mut de)).unwrap();
-    dbg!(serde_xml_rs::from_reader::<_, Sheet>(
-        std::fs::File::open(path).unwrap()
-    ));
+pub fn parse_file(path: &str) -> Result<Sheet, Box<dyn std::error::Error>> {
+    Ok(serde_xml_rs::from_reader::<_, Sheet>(
+        std::fs::File::open(path).unwrap(),
+    )?)
 }
