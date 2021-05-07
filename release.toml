@@ -1,0 +1,6 @@
+pre-release-commit-message="(cargo-release) version {{version}}"
+post-release-commit-message="(cargo-release) start next development iteration {{next_version}}"
+tag-prefix=""
+tag-name="{{prefix}}{{version}}"
+tag-message="{{version}}"
+dev-version-ext="dev"

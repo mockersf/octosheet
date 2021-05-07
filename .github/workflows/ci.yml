@@ -1,0 +1,118 @@
+on:
+  pull_request:
+  push:
+
+name: Continuous integration
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        rust:
+          - stable
+          - beta
+          - nightly
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: ${{ matrix.rust }}
+          override: true
+          components: rustfmt, clippy
+
+      - name: Build
+        uses: actions-rs/cargo@v1
+        with:
+          command: build
+
+      - name: Test
+        uses: actions-rs/cargo@v1
+        with:
+          command: test
+
+      - name: Format
+        uses: actions-rs/cargo@v1
+        with:
+          command: fmt
+          args: --all -- --check
+
+      - name: Clippy
+        uses: actions-rs/cargo@v1
+        with:
+          command: clippy
+          args: -- -D warnings
+
+
+  check-doc:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Build and check doc
+        run: RUSTDOCFLAGS='-D warnings' cargo doc --all-features --no-deps
+
+  check-advisories:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install cargo-quickinstall
+        run: cargo install cargo-quickinstall
+
+      - name: Install cargo-deny
+        run: cargo quickinstall cargo-deny
+
+      - name: Check for security advisories and unmaintained crates
+        run: cargo deny check advisories
+
+  check-bans:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install cargo-quickinstall
+        run: cargo install cargo-quickinstall
+
+      - name: Install cargo-deny
+        run: cargo quickinstall cargo-deny
+
+      - name: Check for banned and duplicated dependencies
+        run: cargo deny check bans
+
+  check-licenses:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install cargo-quickinstall
+        run: cargo install cargo-quickinstall
+
+      - name: Install cargo-deny
+        run: cargo quickinstall cargo-deny
+
+      - name: Check for unauthorized licenses
+        run: cargo deny check licenses
+
+  check-sources:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install cargo-quickinstall
+        run: cargo install cargo-quickinstall
+
+      - name: Install cargo-deny
+        run: cargo quickinstall cargo-deny
+
+      - name: Checked for unauthorized crate sources
+        run: cargo deny check sources
