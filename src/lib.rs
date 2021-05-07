@@ -12,8 +12,8 @@ pub struct Sheet {
 }
 
 #[derive(Deserialize, Debug)]
-    creator: Creator,
 pub struct Identification {
+    creator: Option<Creator>,
 }
 
 #[derive(Deserialize, Debug)]
@@ -101,7 +101,7 @@ pub struct ScorePart {
     #[serde(rename = "part-name")]
     name: String,
     #[serde(rename = "part-abbreviation")]
-    abbreviation: String,
+    abbreviation: Option<String>,
     #[serde(rename = "score-instrument")]
     instrument: Instrument,
 }
